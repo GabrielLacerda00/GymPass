@@ -23,6 +23,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
   if (userWithSameEmail) {
     return reply.status(409).send()
   }
+  // Crio um hash para senha
+  const password_hash = hash(password, 6)
 
   await prisma.user.create({
     data: {
