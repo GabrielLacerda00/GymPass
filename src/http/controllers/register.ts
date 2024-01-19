@@ -24,13 +24,13 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     return reply.status(409).send()
   }
   // Crio um hash para senha
-  const password_hash = hash(password, 6)
+  const password_hash = await hash(password, 6)
 
   await prisma.user.create({
     data: {
       name,
       email,
-      password_hash: password,
+      password_hash,
     },
   })
 
