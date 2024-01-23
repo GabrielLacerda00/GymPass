@@ -44,7 +44,7 @@ describe('Register Use Case', () => {
 
     const email = 'xaxaxa@gmail.com'
 
-    const { user } = await registerUseCase.handle({
+    await registerUseCase.handle({
       name: 'Xarola',
       email,
       password: '123456789',
