@@ -5,8 +5,8 @@ GymPass style aoo.
 # RFs (Requisitos funcionais)
 
 - [x] Deve ser possível se cadastrar;
-- [] Dever ser possível se autenticar;
-- [] Deve ser possível obter o perfil de um usuário logado;
+- [x] Dever ser possível se autenticar;
+- [x] Deve ser possível obter o perfil de um usuário logado;
 - [] Deve ser possível obter o número de check-ins realizados pelo usuário logado;
 - [] Deve ser possível o usuário buscar academias próximas;
 - [] Dever ser possível o usuário buscar academias próximas;

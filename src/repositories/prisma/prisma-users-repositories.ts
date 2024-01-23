@@ -3,6 +3,16 @@ import { Prisma } from '@prisma/client'
 import { UsersRepository } from '../users-repository'
 
 export class PrismaUserRepository implements UsersRepository {
+  findById(id: string): Promise<{
+    id: string
+    name: string
+    email: string
+    password_hash: string
+    created_at: Date
+  } | null> {
+    throw new Error('Method not implemented.')
+  }
+
   // USerCreateInput é um tipo criado pelo prisma
   // que define os atributos do objeto data
   async create(data: Prisma.UserCreateInput) {
