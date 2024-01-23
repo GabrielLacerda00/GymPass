@@ -1,4 +1,4 @@
-import { expect, test, describe, it } from 'vitest'
+import { expect, describe, it } from 'vitest'
 import { RegisterUserCase } from './register'
 import { compare } from 'bcryptjs'
 import { inMemoryRepository } from '@/repositories/in-memory-repository/in-memory-repository'
@@ -36,5 +36,26 @@ describe('Register Use Case', () => {
     )
 
     expect(isPasswordCorrectlyHashed)
+  })
+  it('should not be able to register same email twice', async () => {
+    // eslint-disable-next-line new-cap
+    const usersRepository = new inMemoryRepository()
+    const registerUseCase = new RegisterUserCase(usersRepository)
+
+    const email = 'xaxaxa@gmail.com'
+
+    const { user } = await registerUseCase.handle({
+      name: 'Xarola',
+      email,
+      password: '123456789',
+    })
+
+    expect(() =>
+      registerUseCase.handle({
+        name: 'Xarola',
+        email,
+        password: '123456789',
+      }),
+    ).rejects.toBeInstanceOf(UserAlreadyExistsError)
   })
 })
