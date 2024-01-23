@@ -1,15 +1,19 @@
-import { expect, describe, it } from 'vitest'
-import { compare, hash } from 'bcryptjs'
+import { expect, describe, it, beforeEach } from 'vitest'
+import { hash } from 'bcryptjs'
 import { inMemoryRepository } from '@/repositories/in-memory-repository/in-memory-repository'
 import { AuthenticateUserCase } from './authenticate'
 import { InvalidCredentialsError } from './errors/invalid-credentials-error'
 
-describe('Authenticate Use Case', () => {
-  it('should be able to authenticate a user credentials', async () => {
-    // eslint-disable-next-line new-cap
-    const usersRepository = new inMemoryRepository()
-    const systemUnderTest = new AuthenticateUserCase(usersRepository)
+let usersRepository: inMemoryRepository
+let systemUnderTest: AuthenticateUserCase
 
+describe('Authenticate Use Case', () => {
+  beforeEach(() => {
+    // eslint-disable-next-line new-cap
+    usersRepository = new inMemoryRepository()
+    systemUnderTest = new AuthenticateUserCase(usersRepository)
+  })
+  it('should be able to authenticate a user credentials', async () => {
     await usersRepository.create({
       name: 'xarola',
       email: 'xaxa@gmail.com',
@@ -25,10 +29,6 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should be not able authenticate with wrong email', async () => {
-    // eslint-disable-next-line new-cap
-    const usersRepository = new inMemoryRepository()
-    const systemUnderTest = new AuthenticateUserCase(usersRepository)
-
     expect(() =>
       systemUnderTest.handle({
         email: 'xaxa@gmail.com',
@@ -38,10 +38,6 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should be not able authenticate with wrong password', async () => {
-    // eslint-disable-next-line new-cap
-    const usersRepository = new inMemoryRepository()
-    const systemUnderTest = new AuthenticateUserCase(usersRepository)
-
     await usersRepository.create({
       name: 'xarola',
       email: 'xaxa@gmail.com',

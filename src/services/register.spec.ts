@@ -1,16 +1,21 @@
-import { expect, describe, it } from 'vitest'
+import { expect, describe, it, beforeEach } from 'vitest'
 import { RegisterUserCase } from './register'
 import { compare } from 'bcryptjs'
 import { inMemoryRepository } from '@/repositories/in-memory-repository/in-memory-repository'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
+import { UsersRepository } from '@/repositories/users-repository'
+
+let usersRepository: UsersRepository
+let systemUnderTest: RegisterUserCase
 
 describe('Register Use Case', () => {
-  it('should be able to create a user', async () => {
+  beforeEach(() => {
     // eslint-disable-next-line new-cap
-    const usersRepository = new inMemoryRepository()
-    const registerUseCase = new RegisterUserCase(usersRepository)
-
-    const { user } = await registerUseCase.handle({
+    usersRepository = new inMemoryRepository()
+    systemUnderTest = new RegisterUserCase(usersRepository)
+  })
+  it('should be able to create a user', async () => {
+    const { user } = await systemUnderTest.handle({
       name: 'Xarola',
       email: 'xaxaxa@gmail.com',
       password: '123456789',
@@ -20,11 +25,7 @@ describe('Register Use Case', () => {
   })
 
   it('should hash user password upon registration', async () => {
-    // eslint-disable-next-line new-cap
-    const usersRepository = new inMemoryRepository()
-    const registerUseCase = new RegisterUserCase(usersRepository)
-
-    const { user } = await registerUseCase.handle({
+    const { user } = await systemUnderTest.handle({
       name: 'Xarola',
       email: 'xaxaxa@gmail.com',
       password: '123456789',
@@ -38,20 +39,16 @@ describe('Register Use Case', () => {
     expect(isPasswordCorrectlyHashed)
   })
   it('should not be able to register same email twice', async () => {
-    // eslint-disable-next-line new-cap
-    const usersRepository = new inMemoryRepository()
-    const registerUseCase = new RegisterUserCase(usersRepository)
-
     const email = 'xaxaxa@gmail.com'
 
-    await registerUseCase.handle({
+    await systemUnderTest.handle({
       name: 'Xarola',
       email,
       password: '123456789',
     })
 
     await expect(() =>
-      registerUseCase.handle({
+      systemUnderTest.handle({
         name: 'Xarola',
         email,
         password: '123456789',
