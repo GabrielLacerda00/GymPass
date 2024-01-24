@@ -2,6 +2,7 @@ import { CheckIn } from '@prisma/client'
 import { CheckInsRepository } from '@/repositories/check-ins-reposiroty'
 import { GymsRepository } from '@/repositories/gyms-repository'
 import { ResourchNotExistsError } from './errors/resource-not-exists'
+import { getDistanceBetweenCoordinates } from '@/utils/get-distance-between-coordinates'
 
 interface CheckInUserCaseRequest {
   userId: string
@@ -23,6 +24,8 @@ export class CheckInUserCase {
   async handle({
     userId,
     gymId,
+    userLatitude,
+    userLongitude,
   }: CheckInUserCaseRequest): Promise<CheckInUserCaseResponse> {
     const gym = await this.gymsRepository.findById(gymId)
 
@@ -31,7 +34,21 @@ export class CheckInUserCase {
     }
 
     // Calculate distance between gym and user
+    const distance = getDistanceBetweenCoordinates(
+      { latitude: userLatitude, longitude: userLongitude },
+      {
+        latitude: gym.latitude.toNumber(),
+        longitude: gym.longitude.toNumber(),
+      },
+    )
 
+    const MAX_DISTANCE_IN_KILOMETERS = 0.1
+
+    if (distance > MAX_DISTANCE_IN_KILOMETERS) {
+      throw new Error()
+    }
+
+    // Verifica se check-in está sendo feito duas vezes no mesmo dia
     const checkInOnSameDate = await this.checkInsRepository.findByUserIdOnDate(
       userId,
       new Date(),

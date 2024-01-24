@@ -20,8 +20,8 @@ describe('Check-In Use Case', () => {
       title: 'JavaScriptGym',
       description: '',
       phone: '',
-      latitude: new Decimal(0),
-      longitude: new Decimal(0),
+      latitude: new Decimal(-8.2853046),
+      longitude: new Decimal(-35.9684502),
     })
 
     vi.useFakeTimers()
@@ -35,8 +35,8 @@ describe('Check-In Use Case', () => {
     const { checkIn } = await systemUnderTest.handle({
       userId: '123456',
       gymId: '12345678',
-      userLatitude: 0,
-      userLongitude: 0,
+      userLatitude: -8.2853046,
+      userLongitude: -35.9684502,
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
@@ -48,16 +48,16 @@ describe('Check-In Use Case', () => {
     await systemUnderTest.handle({
       userId: '123456',
       gymId: '12345678',
-      userLatitude: 0,
-      userLongitude: 0,
+      userLatitude: -8.2853046,
+      userLongitude: -35.9684502,
     })
 
     await expect(() =>
       systemUnderTest.handle({
         userId: '123456',
         gymId: '12345678',
-        userLatitude: 0,
-        userLongitude: 0,
+        userLatitude: -8.2853046,
+        userLongitude: -35.9684502,
       }),
     ).rejects.toBeInstanceOf(Error)
   })
@@ -68,8 +68,8 @@ describe('Check-In Use Case', () => {
     await systemUnderTest.handle({
       userId: '123456',
       gymId: '12345678',
-      userLatitude: 0,
-      userLongitude: 0,
+      userLatitude: -8.2853046,
+      userLongitude: -35.9684502,
     })
 
     vi.setSystemTime(new Date(2024, 0, 25, 8, 0, 0))
@@ -77,10 +77,30 @@ describe('Check-In Use Case', () => {
     const { checkIn } = await systemUnderTest.handle({
       userId: '123456',
       gymId: '12345678',
-      userLatitude: 0,
-      userLongitude: 0,
+      userLatitude: -8.2853046,
+      userLongitude: -35.9684502,
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
+  })
+
+  it('should be not able to check in to distant gym', async () => {
+    gymsRepository.items.push({
+      id: '12345',
+      title: 'JavaScriptGym',
+      description: '',
+      phone: '',
+      latitude: new Decimal(-8.2684899),
+      longitude: new Decimal(-35.9354635),
+    })
+
+    await expect(() =>
+      systemUnderTest.handle({
+        userId: '123456',
+        gymId: '12345',
+        userLatitude: -8.2853046,
+        userLongitude: -35.9684502,
+      }),
+    ).rejects.toBeInstanceOf(Error)
   })
 })
