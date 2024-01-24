@@ -37,8 +37,6 @@ export class RegisterUserCase {
     // Crio um hash para senha
     const password_hash = await hash(password, 6)
 
-    // const usersRepository = new PrismaUserRepository()
-
     const user = await this.usersRepository.create({
       name,
       email,
