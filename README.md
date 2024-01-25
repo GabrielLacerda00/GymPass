@@ -7,7 +7,7 @@ GymPass style aoo.
 - [x] Deve ser possível se cadastrar;
 - [x] Dever ser possível se autenticar;
 - [x] Deve ser possível obter o perfil de um usuário logado;
-- [] Deve ser possível obter o número de check-ins realizados pelo usuário logado;
+- [x] Deve ser possível obter o número de check-ins realizados pelo usuário logado;
 - [] Deve ser possível o usuário buscar academias próximas;
 - [] Dever ser possível o usuário buscar academias próximas;
 - [] Deve ser possível o usuário realizar check-in em uma academia;
