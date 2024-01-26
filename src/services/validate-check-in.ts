@@ -18,7 +18,8 @@ export class ValidateCheckInUserCase {
   }: ValidateCheckInUserCaseRequest): Promise<ValidateCheckInUserCaseResponse> {
     const checkIn = await this.checkInsRepository.findById(checkInId)
 
-    if (checkIn === null) {
+    console.log(checkIn)
+    if (!checkIn) {
       throw new ResourchNotExistsError()
     }
 

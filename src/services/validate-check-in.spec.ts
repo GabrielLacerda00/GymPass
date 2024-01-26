@@ -1,6 +1,7 @@
 import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest'
 import { checkInsInMemoryRepository } from '@/repositories/in-memory-repository/in-memory-check-ins-repository'
 import { ValidateCheckInUserCase } from './validate-check-in'
+import { ResourchNotExistsError } from './errors/resource-not-exists'
 
 let checkInsRepository: checkInsInMemoryRepository
 let systemUnderTest: ValidateCheckInUserCase
@@ -30,5 +31,13 @@ describe('Validate Check-In Use Case', () => {
 
     expect(checkIn.validated_at).toEqual(expect.any(Date)) // Verifico se tem valor null
     expect(checkInsRepository.items[0].validated_at).toEqual(expect.any(Date)) // Valido se realmente houve a validação
+  })
+
+  it('should be able not able to validate a inexistent check-in', async () => {
+    await expect(() =>
+      systemUnderTest.handle({
+        checkInId: '211232345456',
+      }),
+    ).rejects.toBeInstanceOf(ResourchNotExistsError)
   })
 })
