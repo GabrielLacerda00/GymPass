@@ -2,6 +2,7 @@ import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest'
 import { checkInsInMemoryRepository } from '@/repositories/in-memory-repository/in-memory-check-ins-repository'
 import { ValidateCheckInUserCase } from './validate-check-in'
 import { ResourchNotExistsError } from './errors/resource-not-exists'
+import { ValidateTimeError } from './errors/validate-time-error'
 
 let checkInsRepository: checkInsInMemoryRepository
 let systemUnderTest: ValidateCheckInUserCase
@@ -57,6 +58,6 @@ describe('Validate Check-In Use Case', () => {
       systemUnderTest.handle({
         checkInId: createdCheckIn.id,
       }),
-    ).rejects.toBeInstanceOf(Error)
+    ).rejects.toBeInstanceOf(ValidateTimeError)
   })
 })

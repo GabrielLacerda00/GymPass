@@ -1,6 +1,8 @@
 import { CheckIn } from '@prisma/client'
 import { CheckInsRepository } from '@/repositories/check-ins-reposiroty'
 import { ResourchNotExistsError } from './errors/resource-not-exists'
+import dayjs from 'dayjs'
+import { ValidateTimeError } from './errors/validate-time-error'
 
 interface ValidateCheckInUserCaseRequest {
   checkInId: string
@@ -18,9 +20,18 @@ export class ValidateCheckInUserCase {
   }: ValidateCheckInUserCaseRequest): Promise<ValidateCheckInUserCaseResponse> {
     const checkIn = await this.checkInsRepository.findById(checkInId)
 
-    console.log(checkIn)
     if (!checkIn) {
       throw new ResourchNotExistsError()
+    }
+
+    // validate minutes after a check-in creation
+    const rangeTimeInMinutesFromCheckInCreation = dayjs(new Date()).diff(
+      checkIn.created_at,
+      'minutes',
+    )
+
+    if (rangeTimeInMinutesFromCheckInCreation > 20) {
+      throw new ValidateTimeError()
     }
 
     checkIn.validated_at = new Date()
