@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { MakeCreateGymUseCase } from '@/factories/make-create-gym-user-case'
 
-export async function register(request: FastifyRequest, reply: FastifyReply) {
+export async function create(request: FastifyRequest, reply: FastifyReply) {
   // Crio meu schema do usuário
   const createGymSchema = z.object({
     title: z.string(),
